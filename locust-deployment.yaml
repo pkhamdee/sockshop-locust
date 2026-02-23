@@ -20,7 +20,7 @@ spec:
           args:
             - -f
             - /mnt/locust/locustfile.py
-            - --host=http://front-end.sockshop.svc.cluster.local
+            - --host=http://front-end.cd-project.svc.cluster.local
             - --headless
             - -u
             - "2"        # x concurrent users
