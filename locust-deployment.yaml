@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locust
+  labels:
+    app: locust
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: locust
+  template:
+    metadata:
+      labels:
+        app: locust
+    spec:
+      containers:
+        - name: locust
+          image: 10.55.86.112/docker/pkhamdee/locust-sockshop:latest
+          args:
+            - -f
+            - /mnt/locust/locustfile.py
+            - --host=http://front-end.sockshop.svc.cluster.local
+            - --headless
+            - -u
+            - "2"        # x concurrent users
+            - -r
+            - "1"         # spawn x users per second
+            - --run-time
+            - "30m"         # run for x minutes
+          ports:
+            - containerPort: 8089
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locust
+spec:
+  type: ClusterIP
+  ports:
+    - name: web
+      port: 8089
+      targetPort: 8089
+  selector:
+    app: locust
